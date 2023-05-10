@@ -1,23 +1,24 @@
-import axios from "axios";
+import { requester } from "../requester";
 
-const BASE_URL = 'https://pokeapi.co/api/v2/'
+// ?_limit=10&_offset=1; - query params;
+// /pokemons/list - endpoints
 
-export const fetchPokemons = async() => {
+export const fetchPokemons = async(params) => {
     try {
-        const { data } = await axios.get(BASE_URL + 'pokemon?limit=20&offset=0')
+        const { data } = await requester.get('pokemon', {
+            params
+        })
         return data;
-    }catch (error) {
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getPokemonByName = async(name) => {
+    try {
+        const { data } = await requester.get('/pokemon/' + name);
+        return data
+    } catch (error) {
 
     }
 }
-export default fetchPokemons
-// export const getPokemonUrl = async(url) => {
-//     try {
-//         const { data } = await axios.get(BASE_URL + 'pokemon?limit=20&offset=0')
-//         return data.sprites.other.dream_world.front_default;
-//     }catch (error) {
-//
-//     }
-// }
-//
-// export default getPokemonUrl
