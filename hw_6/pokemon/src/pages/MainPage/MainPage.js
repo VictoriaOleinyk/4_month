@@ -1,17 +1,49 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-const MainPage = () => {
-    return (
-        <div>MainPage
-            <h1>Syimyk</h1>
-            <Link to={'/about-us'}>
-                <button>To About us</button>
-            </Link>
-            <Link to={'/pokemon/syimyk'}>
-                <button>Button to 2</button>
-            </Link>
-        </div>
-    )
-}
+import React, { useEffect, useState } from 'react';
+import { Pagination, PokemonCard } from '../../components';
+import { fetchPokemons } from '../../api/getPokemons';
 
-export default MainPage
+
+const MainPage = () => {
+    const [pokemonList, setPokemonList] = useState([]);
+    const [offset, setOffset] = useState(1);
+    const [count, setCount] = useState(1);
+    const [page, setPage] = useState(1);
+
+    const limit = 10;
+
+    useEffect(() => {
+        fetchPokemons({ limit, offset }).then((data) => {
+            setPokemonList([...data.results]);
+            const pageCount = Math.ceil(data.count / limit);
+            setCount(pageCount);
+        });
+    }, [offset]);
+
+    const handleNext = () => {
+        if (page === count) return;
+        setOffset((prev) => prev + limit);
+        setPage((prev) => prev + 1);
+    };
+
+    const handlePrev = () => {
+        if (page === 1) return;
+        setOffset((prev) => prev - limit);
+        setPage((prev) => prev - 1);
+    };
+
+
+
+    return (
+        <div>
+            <Pagination page={page} count={count} handleNext={handleNext} handlePrev={handlePrev} />
+            <div className="pokemonList">
+                {pokemonList.map((pokemon) => (
+                    <PokemonCard key={pokemon.name} pokemon={pokemon} />
+                ))}
+            </div>
+
+        </div>
+    );
+};
+
+export default MainPage;

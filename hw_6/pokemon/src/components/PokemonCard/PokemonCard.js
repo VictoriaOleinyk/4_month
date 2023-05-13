@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getPokemonByName } from '../../api/getPokemons';
+import {Link} from "react-router-dom";
 const PokemonCard = ({ pokemon }) => {
     const [pokemonInfo, setPokemonInfo] = useState();
 
@@ -11,8 +12,12 @@ const PokemonCard = ({ pokemon }) => {
     }, [ pokemon.name ])
     return (
         <div className='pokemonCard'>
-            {pokemon.name}
-            <img src={pokemonInfo &&  pokemonInfo.sprites.other.dream_world.front_default} alt="" />
+            <Link to={`/pokemon/${pokemon?.name}`}>
+                <h2>{pokemon.name}</h2>
+                <div className='img'>
+                    <img src={pokemonInfo &&  pokemonInfo.sprites.other.dream_world.front_default} alt="" />
+                </div>
+            </Link>
         </div>
     )
 }
